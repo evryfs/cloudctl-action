@@ -5,6 +5,10 @@ branding:
   icon: download-cloud
   color: blue
 inputs:
+  installKubectl:
+    description: 'Install according kubectl tool'
+    required: true
+    default: 'true'
   apiEndpoint:
     description: 'ICP API-endpoint'
     required: true

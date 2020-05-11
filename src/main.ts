@@ -9,25 +9,31 @@ export async function run(): Promise<void> {
   if (isCleanupPhase()) {
     await exec.exec('cloudctl', ['logout'])
   } else {
-    return downloadToolAndLogin()
+    if (core.getInput('downloadKubectl', {required: true}) === 'true') {
+      await downloadTool('kubectl')
+    }
+    await downloadTool('cloudctl')
+    return cloudctlLogin()
   }
 }
 
-async function downloadToolAndLogin(): Promise<void> {
+async function downloadTool(tool: string): Promise<void> {
   try {
-    const cloudCtl = await toolCache.downloadTool(
+    const download = await toolCache.downloadTool(
       `${core.getInput('apiEndpoint', {
         required: true
-      })}/api/cli/cloudctl-linux-amd64`
+      })}/api/cli/${tool}-linux-amd64`
     )
-    fs.chmodSync(cloudCtl, 0o555)
-    const cachedPath = await toolCache.cacheFile(
-      cloudCtl,
-      'cloudctl',
-      'cloudctl',
-      'latest'
-    )
+    fs.chmodSync(download, 0o555)
+    const cachedPath = await toolCache.cacheFile(download, tool, tool, 'latest')
     core.addPath(cachedPath)
+  } catch (error) {
+    core.setFailed(error.message)
+  }
+}
+
+async function cloudctlLogin(): Promise<void> {
+  try {
     await exec
       .exec('cloudctl', [
         'login',

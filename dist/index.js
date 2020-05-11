@@ -1404,20 +1404,33 @@ function run() {
             yield exec.exec('cloudctl', ['logout']);
         }
         else {
-            return downloadToolAndLogin();
+            if (core.getInput('downloadKubectl', { required: true }) === 'true') {
+                yield downloadTool('kubectl');
+            }
+            yield downloadTool('cloudctl');
+            return cloudctlLogin();
         }
     });
 }
 exports.run = run;
-function downloadToolAndLogin() {
+function downloadTool(tool) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const cloudCtl = yield toolCache.downloadTool(`${core.getInput('apiEndpoint', {
+            const download = yield toolCache.downloadTool(`${core.getInput('apiEndpoint', {
                 required: true
-            })}/api/cli/cloudctl-linux-amd64`);
-            fs_1.default.chmodSync(cloudCtl, 0o555);
-            const cachedPath = yield toolCache.cacheFile(cloudCtl, 'cloudctl', 'cloudctl', 'latest');
+            })}/api/cli/${tool}-linux-amd64`);
+            fs_1.default.chmodSync(download, 0o555);
+            const cachedPath = yield toolCache.cacheFile(download, tool, tool, 'latest');
             core.addPath(cachedPath);
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
+}
+function cloudctlLogin() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
             yield exec
                 .exec('cloudctl', [
                 'login',
