@@ -1404,7 +1404,7 @@ function run() {
             yield exec.exec('cloudctl', ['logout']);
         }
         else {
-            if (core.getInput('downloadKubectl', { required: true }) === 'true') {
+            if (core.getInput('installKubectl', { required: true }) === 'true') {
                 yield downloadTool('kubectl');
             }
             yield downloadTool('cloudctl');

@@ -9,7 +9,7 @@ export async function run(): Promise<void> {
   if (isCleanupPhase()) {
     await exec.exec('cloudctl', ['logout'])
   } else {
-    if (core.getInput('downloadKubectl', {required: true}) === 'true') {
+    if (core.getInput('installKubectl', {required: true}) === 'true') {
       await downloadTool('kubectl')
     }
     await downloadTool('cloudctl')

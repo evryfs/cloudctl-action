@@ -11,7 +11,7 @@ beforeAll(() => {
   inputs.username = 'someUser'
   inputs.password = 'somePassword'
   inputs.namespace = 'someNamespace'
-  inputs.downloadKubectl = 'true'
+  inputs.installKubectl = 'true'
 
   process.env.RUNNER_TEMP = '/tmp'
 
