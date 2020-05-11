@@ -31,7 +31,6 @@ async function downloadToolAndLogin(): Promise<void> {
     await exec
       .exec('cloudctl', [
         'login',
-        '--skip-ssl-validation',
         '-a',
         core.getInput('apiEndpoint', {required: true}),
         '-u',

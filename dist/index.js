@@ -1421,7 +1421,6 @@ function downloadToolAndLogin() {
             yield exec
                 .exec('cloudctl', [
                 'login',
-                '--skip-ssl-validation',
                 '-a',
                 core.getInput('apiEndpoint', { required: true }),
                 '-u',
