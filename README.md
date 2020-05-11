@@ -1,4 +1,4 @@
-# Cloudctl action
+# Cloudctl action for IBM Cloud Private (ICP)
 
 This action installs `cloudctl` and optionally `kubectl` and logs into the cluster.
 
