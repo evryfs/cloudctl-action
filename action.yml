@@ -1,6 +1,9 @@
 name: 'cloudctl-action'
 description: 'Setup cloudctl for IBM Cloud Private'
 author: 'evryfs'
+branding:
+  icon: download-cloud
+  color: blue
 inputs:
   apiEndpoint:
     description: 'ICP API-endpoint'
@@ -17,3 +20,4 @@ inputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
+  post: 'dist/index.js'
