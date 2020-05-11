@@ -1,10 +1,19 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'cloudctl-action'
+description: 'Setup cloudctl for IBM Cloud Private'
+author: 'evryfs'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  apiEndpoint:
+    description: 'ICP API-endpoint'
+    required: true
+  username:
+    description: 'Username for login'
+    required: true
+  password:
+    description: 'Password for login'
+    required: true
+  namespace:
+    description: 'Default namespace'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

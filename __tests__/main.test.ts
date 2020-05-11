@@ -1,27 +1,34 @@
-import {wait} from '../src/wait'
-import * as process from 'process'
-import * as cp from 'child_process'
-import * as path from 'path'
+import {run} from '../src/main'
+import * as core from '@actions/core'
+import * as exec from '@actions/exec'
+import {beforeEach} from 'jest-circus'
 
-test('throws invalid number', async () => {
-  const input = parseInt('foo', 10)
-  await expect(wait(input)).rejects.toThrow('milliseconds not a number')
+let inputs = {} as any
+
+beforeAll(() => {
+  inputs.apiEndpoint = 'someEndpoint'
+  inputs.username = 'someUser'
+  inputs.password = 'somePassword'
+  inputs.namespace = 'someNamespace'
+
+  jest.spyOn(exec, 'exec').mockImplementation(
+    (): Promise<number> => {
+      return Promise.resolve(0)
+    }
+  )
+
+  jest.spyOn(core, 'getInput').mockImplementation((name: string): string => {
+    return inputs[name]
+  })
 })
 
-test('wait 500 ms', async () => {
-  const start = new Date()
-  await wait(500)
-  const end = new Date()
-  var delta = Math.abs(end.getTime() - start.getTime())
-  expect(delta).toBeGreaterThan(450)
+/*
+beforeEach(() => {
+  // Reset inputs
+  inputs = {}
 })
+*/
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = '500'
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecSyncOptions = {
-    env: process.env
-  }
-  console.log(cp.execSync(`node ${ip}`, options).toString())
+test('test runs', async () => {
+  await expect(run()).resolves.not.toThrow
 })
