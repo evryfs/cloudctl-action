@@ -1,6 +1,6 @@
 # Cloudctl action
 
-This action installs `cloudctl` and logs into the cluster.
+This action installs `cloudctl` and optionally `kubectl` and logs into the cluster.
 
 ## Usage
 
