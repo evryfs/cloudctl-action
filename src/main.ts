@@ -15,6 +15,7 @@ export async function run(): Promise<void> {
         'context',
         core.getState('context')
       ])
+      await exec.exec('kubectl', ['config', 'unset', 'current-context'])
     }
   } else {
     if (core.getInput('installKubectl', {required: true}) === 'true') {
