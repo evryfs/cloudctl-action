@@ -1402,6 +1402,15 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         if (isCleanupPhase()) {
             yield exec.exec('cloudctl', ['logout']);
+            if (core.getState('context').length > 0) {
+                yield exec.exec('kubectl', [
+                    'config',
+                    'delete',
+                    'context',
+                    core.getState('context')
+                ]);
+                yield exec.exec('kubectl', ['config', 'unset', 'current-context']);
+            }
         }
         else {
             if (core.getInput('installKubectl', { required: true }) === 'true') {
@@ -1442,7 +1451,17 @@ function cloudctlLogin() {
                 core.getInput('password', { required: true }),
                 '-n',
                 core.getInput('namespace', { required: true })
-            ])
+            ], {
+                listeners: {
+                    stdline: (data) => {
+                        const match = data.match(/Context "(?<context>.*)" created./);
+                        if (match === null || match === void 0 ? void 0 : match.groups) {
+                            const context = match.groups['context'];
+                            core.saveState('context', context);
+                        }
+                    }
+                }
+            })
                 .then(() => core.saveState(STATE_FLAG, 'true'));
         }
         catch (error) {
