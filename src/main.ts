@@ -11,8 +11,7 @@ export async function run(): Promise<void> {
     if (core.getState('context').length > 0) {
       await exec.exec('kubectl', [
         'config',
-        'delete',
-        'context',
+        'delete-context',
         core.getState('context')
       ])
       await exec.exec('kubectl', ['config', 'unset', 'current-context'])

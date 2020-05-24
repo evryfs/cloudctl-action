@@ -1405,8 +1405,7 @@ function run() {
             if (core.getState('context').length > 0) {
                 yield exec.exec('kubectl', [
                     'config',
-                    'delete',
-                    'context',
+                    'delete-context',
                     core.getState('context')
                 ]);
                 yield exec.exec('kubectl', ['config', 'unset', 'current-context']);
