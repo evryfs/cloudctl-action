@@ -1397,19 +1397,16 @@ const core = __importStar(__webpack_require__(470));
 const toolCache = __importStar(__webpack_require__(533));
 const fs_1 = __importDefault(__webpack_require__(747));
 const exec = __importStar(__webpack_require__(986));
+const io = __importStar(__webpack_require__(1));
+const os = __importStar(__webpack_require__(87));
 const STATE_FLAG = 'cloudctlLogin';
+const KUBE_CONFIG_BACKUP = `${os.tmpdir()}/kubeconfig.cloudctl.bak`;
+const KUBE_CONFIG_FILE = `${os.homedir()}/.kube/config`;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         if (isCleanupPhase()) {
             yield exec.exec('cloudctl', ['logout']);
-            if (core.getState('context').length > 0) {
-                yield exec.exec('kubectl', [
-                    'config',
-                    'delete-context',
-                    core.getState('context')
-                ]);
-                yield exec.exec('kubectl', ['config', 'unset', 'current-context']);
-            }
+            yield restoreKubeConfig();
         }
         else {
             if (core.getInput('installKubectl', { required: true }) === 'true') {
@@ -1421,6 +1418,14 @@ function run() {
     });
 }
 exports.run = run;
+function restoreKubeConfig() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield io.rmRF(KUBE_CONFIG_FILE);
+        if (fs_1.default.existsSync(KUBE_CONFIG_BACKUP)) {
+            yield io.mv(KUBE_CONFIG_BACKUP, KUBE_CONFIG_FILE);
+        }
+    });
+}
 function downloadTool(tool) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1436,9 +1441,17 @@ function downloadTool(tool) {
         }
     });
 }
+function backupConfig() {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (fs_1.default.existsSync(KUBE_CONFIG_FILE)) {
+            yield io.cp(KUBE_CONFIG_FILE, KUBE_CONFIG_BACKUP);
+        }
+    });
+}
 function cloudctlLogin() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            yield backupConfig();
             yield exec
                 .exec('cloudctl', [
                 'login',
@@ -1450,17 +1463,7 @@ function cloudctlLogin() {
                 core.getInput('password', { required: true }),
                 '-n',
                 core.getInput('namespace', { required: true })
-            ], {
-                listeners: {
-                    stdline: (data) => {
-                        const match = data.match(/Context "(?<context>.*)" created./);
-                        if (match === null || match === void 0 ? void 0 : match.groups) {
-                            const context = match.groups['context'];
-                            core.saveState('context', context);
-                        }
-                    }
-                }
-            })
+            ])
                 .then(() => core.saveState(STATE_FLAG, 'true'));
         }
         catch (error) {
