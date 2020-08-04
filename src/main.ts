@@ -53,19 +53,18 @@ async function backupConfig(): Promise<void> {
 async function cloudctlLogin(): Promise<void> {
   try {
     await backupConfig()
-    await exec
-      .exec('cloudctl', [
-        'login',
-        '-a',
-        core.getInput('apiEndpoint', {required: true}),
-        '-u',
-        core.getInput('username', {required: true}),
-        '-p',
-        core.getInput('password', {required: true}),
-        '-n',
-        core.getInput('namespace', {required: true})
-      ])
-      .then(() => core.saveState(STATE_FLAG, 'true'))
+    await exec.exec('cloudctl', [
+      'login',
+      '-a',
+      core.getInput('apiEndpoint', {required: true}),
+      '-u',
+      core.getInput('username', {required: true}),
+      '-p',
+      core.getInput('password', {required: true}),
+      '-n',
+      core.getInput('namespace', {required: true})
+    ])
+    core.saveState(STATE_FLAG, 'true')
   } catch (error) {
     core.setFailed(error.message)
   }
