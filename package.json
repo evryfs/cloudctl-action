@@ -29,7 +29,7 @@
     "@actions/tool-cache": "^1.6.0"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.10",
+    "@types/jest": "^26.0.12",
     "@types/node": "^12.12.54",
     "@typescript-eslint/parser": "^4.0.1",
     "@zeit/ncc": "^0.22.3",
