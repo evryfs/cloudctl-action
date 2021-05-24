@@ -57,13 +57,13 @@ async function cloudctlLogin(): Promise<void> {
     await exec.exec('cloudctl', [
       'login',
       '-a',
-      core.getInput('apiEndpoint', {required: true, trimWhitespace: true}),
+      core.getInput('apiEndpoint', {required: true}),
       '-u',
-      core.getInput('username', {required: true, trimWhitespace: true}),
+      core.getInput('username', {required: true}),
       '-p',
-      core.getInput('password', {required: true, trimWhitespace: true}),
+      core.getInput('password', {required: true}),
       '-n',
-      core.getInput('namespace', {required: true, trimWhitespace: true})
+      core.getInput('namespace', {required: true})
     ])
     core.saveState(STATE_FLAG, 'true')
   } catch (error) {
