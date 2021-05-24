@@ -14,7 +14,7 @@ export async function run(): Promise<void> {
     await exec.exec('cloudctl', ['logout'])
     await restoreKubeConfig()
   } else {
-    if (core.getInput('installKubectl', {required: true}) === 'true') {
+    if (core.getBooleanInput('installKubectl', {required: true})) {
       await downloadTool('kubectl')
     }
     await downloadTool('cloudctl')
@@ -33,7 +33,8 @@ async function downloadTool(tool: string): Promise<void> {
   try {
     const download = await toolCache.downloadTool(
       `${core.getInput('apiEndpoint', {
-        required: true
+        required: true,
+        trimWhitespace: true
       })}/api/cli/${tool}-linux-amd64`
     )
     fs.chmodSync(download, 0o555)
@@ -56,13 +57,13 @@ async function cloudctlLogin(): Promise<void> {
     await exec.exec('cloudctl', [
       'login',
       '-a',
-      core.getInput('apiEndpoint', {required: true}),
+      core.getInput('apiEndpoint', {required: true, trimWhitespace: true}),
       '-u',
-      core.getInput('username', {required: true}),
+      core.getInput('username', {required: true, trimWhitespace: true}),
       '-p',
-      core.getInput('password', {required: true}),
+      core.getInput('password', {required: true, trimWhitespace: true}),
       '-n',
-      core.getInput('namespace', {required: true})
+      core.getInput('namespace', {required: true, trimWhitespace: true})
     ])
     core.saveState(STATE_FLAG, 'true')
   } catch (error) {
