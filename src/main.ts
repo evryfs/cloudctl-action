@@ -1,9 +1,9 @@
 import * as core from '@actions/core'
-import * as toolCache from '@actions/tool-cache'
-import fs from 'fs'
 import * as exec from '@actions/exec'
 import * as io from '@actions/io'
 import * as os from 'os'
+import * as toolCache from '@actions/tool-cache'
+import fs from 'fs'
 
 const STATE_FLAG = 'cloudctlLogin'
 const KUBE_CONFIG_BACKUP = `${os.tmpdir()}/kubeconfig.cloudctl.bak`
