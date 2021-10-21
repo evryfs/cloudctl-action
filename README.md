@@ -1,3 +1,7 @@
+# Archived
+
+This repo is no longer maintained.
+
 # Cloudctl action for IBM Cloud Private (ICP)
 
 This action installs `cloudctl` and optionally `kubectl` and logs into the cluster.
