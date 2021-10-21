@@ -15,17 +15,15 @@ beforeAll(() => {
 
   process.env.RUNNER_TEMP = '/tmp'
 
-  jest.spyOn(exec, 'exec').mockImplementation(
-    (): Promise<number> => {
-      return Promise.resolve(0)
-    }
-  )
+  jest.spyOn(exec, 'exec').mockImplementation((): Promise<number> => {
+    return Promise.resolve(0)
+  })
 
-  jest.spyOn(toolcache, 'downloadTool').mockImplementation(
-    (): Promise<string> => {
+  jest
+    .spyOn(toolcache, 'downloadTool')
+    .mockImplementation((): Promise<string> => {
       return Promise.resolve('somefile')
-    }
-  )
+    })
 
   jest.spyOn(core, 'getInput').mockImplementation((name: string): string => {
     return inputs[name]
